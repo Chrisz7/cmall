@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    username: root
+    password: z123
+    url: jdbc:mysql://192.168.60.133:3306/cmall_stock_ms
+    driver-class-name: com.mysql.jdbc.Driver
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: cmall-stock
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+server:
+  port: 11000
+logging:
+  level:
+    com.zcw.cmall: debug
+

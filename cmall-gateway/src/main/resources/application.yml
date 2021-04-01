@@ -1,0 +1,99 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+#        - id: test_route
+#          uri: https://www.baidu.com
+#          predicates:
+#            - Query=url,baidu
+#        - id: qq_route
+#          uri: https://www.qq.com
+#          predicates:
+#            - Query=url,qq
+
+#filters:
+        #            - RewritePath=/api/(?<segment>.*),/$\{segment}  把api去掉，剩下的都要保留
+        ##用户服务
+        - id: user_router
+          uri: lb://cmall-user
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        ##商品服务
+        - id: goods_router
+          uri: lb://cmall-goods
+          predicates:
+            - Path=/api/goods/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        ##第三方服务
+        - id: third_server_router
+          uri: lb://cmall-third-server
+          predicates:
+            - Path=/api/thirdserver/**
+          filters:
+            - RewritePath=/api/thirdserver/(?<segment>.*),/$\{segment}
+        ##库存服务
+        - id: stock_router
+          uri: lb://cmall-stock
+          predicates:
+            - Path=/api/stock/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        ##商品服务
+        - id: coupon_router
+          uri: lb://cmall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        ##renren-fast服务
+        - id: admin_router
+          ##从注册中心找到renren-fast ,是有顺序的，最后的匹配交给renren-fast
+          ##http://localhost:88/api/xxx   路由到http://renren-fast:8080/api/xxx  路径重写-> http://localhost:8080/renren-fast/xxx
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+        #只能放到最后面，因为cmall.com先是映射到windows的host配置，找到对应的ip的虚拟机上的nginx，nginx默认监听80端口（请求地址直接写cmall.com，不用写端口号），会带上host=cmall.com
+        #监听server_name（其实就是请求中的host）为cmall.com，和host匹配上了的请求用proxy_pass进行转发，转发可以不通过网关直接到本机项目地址，
+        #也可以转发到网关，在nginx/conf/nginx.conf 配置upstream 上游地址 ，在通过proxy_pass 转发搭到网关，但是nginx在转发给gateway的时候会丢失host主机，需要配置 proxy_set_header Host $host
+        #也需要在gateway进行配置，- Host=**.cmall.com 拦截所有cmall.com的请求转发到 cmall-goods,放到了最前面，请求地址不能截串，
+        ##商品服务
+        - id: cmall_host_route
+          uri: lb://cmall-goods
+          predicates:
+            - Host=cmall.com,item.cmall.com
+        ##商品检索服务
+        - id: cmall_search_route
+          uri: lb://cmall-search
+          predicates:
+            - Host=search.cmall.com
+        ##用户认证服务
+        - id: cmall_auth_route
+          uri: lb://cmall-auth-server
+          predicates:
+            - Host=auth.cmall.com
+        ##购物车服务
+        - id: cmall_cart_route
+          uri: lb://cmall-cart
+          predicates:
+            - Host=cart.cmall.com
+        ##订单服务
+        - id: cmall_order_route
+          uri: lb://cmall-order
+          predicates:
+            - Host=order.cmall.com,order.free.vipnps.vip
+        ##会员服务
+        - id: cmall_user_route
+          uri: lb://cmall-user
+          predicates:
+            - Host=member.cmall.com
+#一会注册不上注册中心，一会又可以了？？
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'

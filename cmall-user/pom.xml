@@ -5,21 +5,32 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <version>2.1.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zcw</groupId>
     <artifactId>cmall-user</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>cmall-user</name>
-    <description>CMall-用户服务</description>
+    <description>cmall-用户服务</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+        <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.zcw</groupId>
+            <artifactId>cmall-common</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -40,6 +51,41 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!-- redis start-->
+        <!-- redis spring-session-redis start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <!-- 排除lettuce操作redis的方式 -->
+                    <groupId>io.lettuce</groupId>
+                    <artifactId>lettuce-core</artifactId>
+                    <!-- 排除lettuce操作redis的方式 -->
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- jedis start  lettuce有内存泄漏的问题，导入时排除lettuce-core，切换为jedis-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+        <!-- jedis end-->
+
+        <!-- Spring Session start-->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <!-- Spring Session end-->
+        <!-- redis spring-session-redis end-->
+        <!-- redis end -->
+
     </dependencies>
 
     <dependencyManagement>
@@ -50,6 +96,10 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId> spring-boot-starter-actuator</artifactId>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.1.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.zcw</groupId>
+    <artifactId>cmall-search</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>cmall-search</name>
+    <description>Elasticsearch检索服务</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <elasticsearch.version>7.4.2</elasticsearch.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.zcw</groupId>
+            <artifactId>cmall-common</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- elasticsearch-rest-high-level-client -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>7.4.2</version>
+        </dependency>
+        <!-- elasticsearch-rest-high-level-client -->
+
+        <!-- thymeleaf 模板引擎 前端可以直接用来使用和修改，性能不是很高，在生产环境下开启了缓存，性能还是很高的
+             springboot static中放静态资源，templates放模板,能够直接访问到index
+             devtools热启动-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <!-- thymeleaf  前端可以直接用来使用和修改-->
+
+        <!-- redis start-->
+        <!-- redis spring-session-redis start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <!-- 排除lettuce操作redis的方式 -->
+                    <groupId>io.lettuce</groupId>
+                    <artifactId>lettuce-core</artifactId>
+                    <!-- 排除lettuce操作redis的方式 -->
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- jedis start  lettuce有内存泄漏的问题，导入时排除lettuce-core，切换为jedis-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+        <!-- jedis end-->
+
+        <!-- Spring Session start-->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <!-- Spring Session end-->
+        <!-- redis spring-session-redis end-->
+        <!-- redis end -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId> spring-boot-starter-actuator</artifactId>
+            <version>2.1.0.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+

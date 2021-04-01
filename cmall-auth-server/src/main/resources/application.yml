@@ -1,0 +1,43 @@
+#当前服务的其他配置信息（注册中心地址等等
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    alicloud:
+      access-key: LTAI4G4GwAfYSzts2hpHZcze
+      secret-key: S9rTagkicAEP2hf97GIwOhgx9DCCaC
+      oss:
+        endpoint: oss-cn-beijing.aliyuncs.com
+        bucket: cmall-chrisz
+
+  application:
+    name: cmall-auth-server
+    #日期格式化
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    #开发期间关闭缓存，能看到实时效果
+    cache: false
+    #prefix: 默认前缀都是 /resources/templates 后缀都是.html
+    #controller返回的不是json，是字符串的话，springmvc自动拼串，视图解析器会自动匹配html视图页面
+  redis:
+    host: 192.168.60.137
+    port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      #设置前缀,设置了就用这个，不设置用我们给定的value值
+      #key-prefix: CACHE_
+      #前缀用不用
+      use-key-prefix: true
+      #是否缓存空值，防止缓存穿透
+      cache-null-values: true
+  session:
+    store-type: redis
+server:
+  port: 20000
+logging:
+  level:
+    com.zcw.cmall: debug

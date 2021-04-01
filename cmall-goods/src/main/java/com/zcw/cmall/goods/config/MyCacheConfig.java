@@ -1,0 +1,43 @@
+package com.zcw.cmall.goods.config;
+
+
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+/**
+ * @author Chrisz
+ * @date 2020/11/24 - 20:10
+ */
+@EnableCaching
+@Configuration
+public class MyCacheConfig {
+    @Bean
+    public org.springframework.data.redis.cache.RedisCacheConfiguration redisCacheConfiguration(CacheProperties cacheProperties) {
+        CacheProperties.Redis redisProperties = cacheProperties.getRedis();
+        org.springframework.data.redis.cache.RedisCacheConfiguration config = org.springframework.data.redis.cache.RedisCacheConfiguration
+                .defaultCacheConfig();
+        //设置json为序列化器
+        config = config.serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+        //设置配置文件中的各项参数
+        if (redisProperties.getTimeToLive() != null) {
+            config = config.entryTtl(redisProperties.getTimeToLive());
+        }
+        if (redisProperties.getKeyPrefix() != null) {
+            config = config.prefixKeysWith(redisProperties.getKeyPrefix());
+        }
+        if (!redisProperties.isCacheNullValues()) {
+            config = config.disableCachingNullValues();
+        }
+        if (!redisProperties.isUseKeyPrefix()) {
+            config = config.disableKeyPrefix();
+        }
+        return config;
+    }
+}

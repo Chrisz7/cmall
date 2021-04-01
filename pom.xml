@@ -17,5 +17,8 @@
         <module>cmall-order</module>
         <module>cmall-stock</module>
         <module>cmall-user</module>
+        <module>renren-fast</module>
+        <module>renren-generator</module>
+        <module>cmall-common</module>
     </modules>
 </project>

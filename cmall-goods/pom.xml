@@ -5,21 +5,32 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <version>2.1.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zcw</groupId>
     <artifactId>cmall-goods</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>cmall-goods</name>
-    <description>CMall-商品服务</description>
+    <description>cmall-商品服务</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+        <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.zcw</groupId>
+            <artifactId>cmall-common</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -40,6 +51,110 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.4.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>2.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.1.5.Final</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Spring Cloud Alibab -->
+        <!--<dependency>-->
+            <!--<groupId>com.aliyun.oss</groupId>-->
+            <!--<artifactId>aliyun-sdk-oss</artifactId>-->
+            <!--<version>3.10.2</version>-->
+        <!--</dependency>-->
+
+        <!-- Spring Cloud Alibab -->
+
+        <!--模板引擎 前端可以直接用来使用和修改，性能不是很高，在生产环境下开启了缓存，性能还是很高的-->
+        <!--springboot static中放静态资源，templates放模板,能够直接访问到index-->
+        <!-- thymeleaf -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <!-- thymeleaf  前端可以直接用来使用和修改-->
+
+        <!-- redis start-->
+        <!-- redis spring-session-redis start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <!-- 排除lettuce操作redis的方式 -->
+                    <groupId>io.lettuce</groupId>
+                    <artifactId>lettuce-core</artifactId>
+                    <!-- 排除lettuce操作redis的方式 -->
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- jedis start  lettuce有内存泄漏的问题，导入时排除lettuce-core，切换为jedis-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+        <!-- jedis end-->
+
+        <!-- Spring Session start-->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <!-- Spring Session end-->
+        <!-- redis spring-session-redis end-->
+        <!-- redis end -->
+
+
+        <!-- redisson start  spring boot没有管理的依赖，可以自己加上版本号 start-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
+        <!-- redisson end-->
+
+        <!--Sring cache start -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <!--Sring cache end -->
+        <!-- redis end-->
+
+        <!--配置yml自动提示，不加也没事-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+        <!--配置yml自动提示-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-actuator</artifactId>-->
+        <!--</dependency>-->
+
     </dependencies>
 
     <dependencyManagement>

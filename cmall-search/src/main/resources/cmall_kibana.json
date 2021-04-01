@@ -1,0 +1,308 @@
+GET goods/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "skuTitle": "iPhone"
+          }
+        }
+      ],
+      "filter": [
+        {
+          "term": {
+            "catalogId": "225"
+          }
+        },
+        {
+          "terms": {
+            "brandId": [
+              "10",
+              "11"
+            ]
+          }
+        },
+        {
+          "nested": {
+            "path": "attrs",
+            "query": {
+              "bool": {
+                "must": [
+                  {
+                    "term": {
+                      "attrs.attrId": {
+                        "value": "7"
+                      }
+                    }
+                  },
+                  {
+                    "terms": {
+                      "attrs.attrValue": [
+                        "Apple;其他"
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "term":{
+            "hasStock":"true"
+          }
+        },
+        {
+          "range":{
+            "skuPrice":{
+              "gte":"0",
+              "lte":"8000"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "sort": [
+    {
+      "skuPrice": {
+        "order": "desc"
+      }
+    }
+  ],
+  "from": 0,
+  "size": 10,
+  "highlight": {
+    "fields": {"skuTitle":{}},
+    "pre_tags":"<b style='color:red>'",
+    "post_tags": "</b>"
+  },
+  "aggs": {
+    "brand_agg": {
+      "terms": {
+        "field": "brandId",
+        "size": 10
+      },
+      "aggs": {
+        "brand_name_agg": {
+          "terms": {
+            "field": "brandName",
+            "size": 10
+          }
+        },
+        "brand_img_agg": {
+          "terms": {
+            "field": "brandImg",
+            "size": 10
+          }
+        }
+      }
+    },
+    "catalog_agg":{
+      "terms": {
+        "field": "catalogId",
+        "size": 10
+      },
+      "aggs": {
+        "catalog_name_agg": {
+          "terms": {
+            "field": "catalogName",
+            "size": 10
+          }
+        }
+      }
+    },
+    "attr_agg":{
+      "nested": {
+        "path": "attrs"
+      },
+      "aggs": {
+        "attr_id_agg": {
+          "terms": {
+            "field": "attrs.attrId",
+            "size": 10
+          },
+          "aggs": {
+            "attr_name_agg": {
+              "terms": {
+                "field": "attrs.attrName",
+                "size": 10
+              }
+            },
+            "attr_value_agg": {
+              "terms": {
+                "field": "attrs.attrValue",
+                "size": 10
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+GET cmall_goods/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "brand_agg": {
+      "terms": {
+        "field": "brandId",
+        "size": 10
+      },
+      "aggs": {
+        "brand_name_agg": {
+          "terms": {
+            "field": "brandName",
+            "size": 10
+          }
+        },
+        "brand_img_agg": {
+          "terms": {
+            "field": "brandImg",
+            "size": 10
+          }
+        }
+      }
+    },
+    "catalog_agg":{
+      "terms": {
+        "field": "catalogId",
+        "size": 10
+      },
+      "aggs": {
+        "catalog_name_agg": {
+          "terms": {
+            "field": "catalogName",
+            "size": 10
+          }
+        }
+      }
+    },
+    "attr_agg":{
+      "nested": {
+        "path": "attrs"
+      },
+      "aggs": {
+        "attr_id_agg": {
+          "terms": {
+            "field": "attrs.attrId",
+            "size": 10
+          },
+          "aggs": {
+            "attr_name_agg": {
+              "terms": {
+                "field": "attrs.attrName",
+                "size": 10
+              }
+            },
+            "attr_value_agg": {
+              "terms": {
+                "field": "attrs.attrValue",
+                "size": 10
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+GET goods/_search
+
+GET goods/_mapping
+
+PUT cmall_goods
+{
+  "mappings": {
+    "properties": {
+      "attrs": {
+        "type": "nested",
+        "properties": {
+          "attrId": {
+            "type": "long"
+          },
+          "attrName": {
+            "type": "keyword"
+          },
+          "attrValue": {
+            "type": "keyword"
+          }
+        }
+      },
+      "brandId": {
+        "type": "long"
+      },
+      "brandImg": {
+        "type": "keyword"
+      },
+      "brandName": {
+        "type": "keyword"
+      },
+      "catalogId": {
+        "type": "long"
+      },
+      "catalogName": {
+        "type": "keyword"
+      },
+      "hasStock": {
+        "type": "boolean"
+      },
+      "hotScore": {
+        "type": "long"
+      },
+      "saleCount": {
+        "type": "long"
+      },
+      "skuId": {
+        "type": "long"
+      },
+      "skuImg": {
+        "type": "keyword"
+      },
+      "skuPrice": {
+        "type": "keyword"
+      },
+      "skuTitle": {
+        "type": "text",
+        "analyzer": "ik_smart"
+      },
+      "spuId": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+
+POST _reindex
+{
+  "source":{
+    "index":"goods"
+  },
+  "dest":{
+    "index":"cmall_goods"
+  }
+}

@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    username: root
+    password: z123
+    url: jdbc:mysql://192.168.60.133:3306/cmall_order_ms
+    driver-class-name: com.mysql.jdbc.Driver
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+  application:
+    name: cmall-order
+
+  thymeleaf:
+    cache: false
+
+  session:
+    store-type: redis
+  redis:
+    host: 192.168.60.137
+    port: 6379
+
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+
+
+server:
+  port: 9010
+
+cmall:
+  thread:
+    core-size: 20
+    keep-alive-time: 10
+    max-size: 200
